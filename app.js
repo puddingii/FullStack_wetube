@@ -19,6 +19,10 @@ app.use(bodyParser.urlencoded({extended: true}));  //body로부터 정보를 얻
 app.use(morgan("dev")); //누가 접속했는지?
 
 app.use(localsMiddleware);  //전역변수 느낌
+app.use(function(req,res,next) {
+    res.setHeader("Content-Security-Policy","script-src 'self'https://archive.org");
+    return next();
+});
 
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter); // /user로 접속하면 /user의 router전체를 사용하겠다는 의미.
