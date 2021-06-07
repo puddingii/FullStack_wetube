@@ -1,38 +1,20 @@
-export const videos = [
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+mongoose.connect(process.env.MONGO_URL,   // "mongodb://127.0.0.1:27017/wetube"
     {
-        id:32323,
-        title: 'Video11',
-        description: 'This is something',
-        views: 24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id:1223,
-            name:"GeonYeong",
-            email:"geon@naver.com"
-        }
-    },
-    {
-        id:11111,
-        title: 'Video22',
-        description: 'This is something',
-        views: 24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id:1223,
-            name:"GeonYeong",
-            email:"geon@naver.com"
-        }
-    },
-    {
-        id:2222,
-        title: 'Video33',
-        description: 'This is something',
-        views: 24,
-        videoFile: "https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4",
-        creator: {
-            id:1223,
-            name:"GeonYeong",
-            email:"geon@naver.com"
-        }
+        useNewUrlParser: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
     }
-]
+);
+
+const db = mongoose.connection;
+
+const handleOpen = () => console.log("Connected to DB");
+const handleError = (err) => console.log(`Error on DB Connection:${err}`);
+
+db.once("open", handleOpen);   // 딱 한번 발생.
+db.on("error", handleError);   // 여러번 발생시킬 수 있음.

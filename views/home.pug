@@ -7,6 +7,10 @@ block content
             +videoBlock({
                 id: item.id,
                 title: item.title,
-                views: item.views,
-                videoFile: item.videoFile
+                views: item.meta.views,
+                videoFile: item.fileUrl,
+                createdAt: item.createdAt,
+                description: item.description
             })
+        else 
+            li Sorry nothing found.
