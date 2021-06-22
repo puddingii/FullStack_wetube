@@ -116,5 +116,7 @@ dist
 .pnp.*
 
 package-lock.json
-uploads
+/uploads
+/assets
+.env
 # /node_modules

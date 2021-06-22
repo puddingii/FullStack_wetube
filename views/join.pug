@@ -2,10 +2,18 @@ extends layouts/main
 
 block content 
     .form-container 
+        if errorMessage 
+            span=errorMessage
         form(action=routes.join, method="post")
-            input(type="text", name="name", placeholder="Full Name", required=true)
-            input(type="email", name="email", placeholder="Email", required=true)
-            input(type="password", name="password", placeholder="Password", required=true)
-            input(type="password", name="password2", placeholder="Verify Password", required=true)
-            input(type="submit", value="Join Now")
+            input(type="text", name="name", placeholder="Full Name", required)
+            input(type="email", name="email", placeholder="Email", required)
+            input(type="username", name="username", placeholder="Username", required)
+            input(type="password", name="password", placeholder="Password", required)
+            input(type="password", name="password2", placeholder="Verify Password", required)
+            input(type="location", name="location", placeholder="Location", required)
+            input(type="submit", value="Join")
+        hr
+        div 
+            span Already have an account?
+            a(href="/login") Log in now &rarr;
         include partials/socialLogin

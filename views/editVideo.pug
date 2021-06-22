@@ -7,4 +7,3 @@ block content
             textarea(placeholder="Description", name="description", required=true, maxlength=100)=video.description
             input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags", value=video.hashtags.join())
             input(type="submit", value="Update Video")
-        a.form-container__link.form-container__link--delete(href=routes.deleteVideo(video.id)) Delete Video

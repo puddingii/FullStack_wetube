@@ -2,11 +2,29 @@ extends layouts/main
 
 block content 
     .video__player  
-        video(src=`/${video.fileUrl}`, controls="controls")
+        video(src=`/${video.fileUrl}`)
+    div 
+        button#play Play 
+        button#mute Mute 
+        input(type="range", step="0.1", value=0.5, min="0", max="1")#volume
+        div 
+            span#currentTime 00:00
+            span  / 
+            span#totalTime 00:00
+        div
+            input(type="range", step="1", value=0, min="0")#timeline
+
+
     .video__info 
         a(href=routes.editVideo(video.id)) Edit video
+        br
+        a(href=routes.deleteVideo(video.id)) Delete Video
         h5.video__title=video.title
         span.video__views #{video.meta.views} #{video.meta.views === 1 ? "view" : "views"}
         p.video__description=video.description
+        p=video.hashtags
     .video__comments 
         span.video__comment-number #{video.comments.length} #{video.comments.length === 1 ? "comment" : "comments"}
+
+block scripts 
+    script(src="/static/js/videoPlayer.js")

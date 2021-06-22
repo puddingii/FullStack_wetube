@@ -39,5 +39,13 @@ const VideoSchema = new mongoose.Schema({
     hashtags: [{ type: String, trim: true }],
 });
 
+// VideoSchema.pre('save', async function() {  //this는 저장하고자 하는 문서를 가르킴, upload시 처리
+//     this.hashtags = this.hashtags[0].split(",").map(word => (word.startsWith('#') ? word : `#${word}`));
+// })
+
+VideoSchema.static('formatHashtags', function(hashtags) {  //Video.formatHashtags를 사용할 수 있음.
+    return hashtags.split(",").map(word => (word.startsWith("#") ? word : `#${word}`));
+})
+
 const model = mongoose.model("Video", VideoSchema);
 export default model;

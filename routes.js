@@ -1,5 +1,3 @@
-import e from "express";
-
 // Global
 const HOME = "/";
 const JOIN = "/join";
