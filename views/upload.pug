@@ -1,6 +1,9 @@
 extends layouts/main
 
 block content 
+    div 
+        video#preview
+        button#startBtn Start Recording
     .form-container 
         if errorMessage
             span=errorMessage
@@ -11,3 +14,6 @@ block content
             textarea(placeholder="Description", name="description", required=true, maxlength=100)
             input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags")
             input(type="submit", value="Upload Video")
+
+block scripts 
+    script(src="/static/js/recorder.js")
