@@ -16,6 +16,8 @@ header.header
                 li 
                     a(href=`/videos${routes.upload}`) Upload
                 li 
-                    a(href='/editProfile') #{loggedInUser.name}'s Profile
+                    a(href='/users/editProfile') #{loggedInUser.name}'s Profile
                 li 
-                    a(href='/logout') Log Out
+                    a(href='/users/editProfile') Edit Profile
+                li 
+                    a(href='/users/logout') Log Out

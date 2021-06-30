@@ -5,12 +5,12 @@ block content
         if errorMessage 
             span=errorMessage
         form(action=routes.join, method="post")
-            input(type="text", name="name", placeholder="Full Name", required)
+            input(type="text", name="nickName", placeholder="NickName", required)
             input(type="email", name="email", placeholder="Email", required)
-            input(type="username", name="username", placeholder="Username", required)
+            input(type="text", name="name", placeholder="Full Name", required)
             input(type="password", name="password", placeholder="Password", required)
             input(type="password", name="password2", placeholder="Verify Password", required)
-            input(type="location", name="location", placeholder="Location", required)
+            input(type="text", name="location", placeholder="Location", required)
             input(type="submit", value="Join")
         hr
         div 

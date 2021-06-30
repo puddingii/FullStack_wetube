@@ -2,7 +2,7 @@ extends layouts/main
 
 block content 
     .form-container 
-        form(action=routes.editVideo(video.id), method="post")
+        form(method="post")
             input(type="text", placeholder="Title", name="title", required=true, value=video.title)
             textarea(placeholder="Description", name="description", required=true, maxlength=100)=video.description
             input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags", value=video.hashtags.join())

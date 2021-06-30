@@ -7,7 +7,7 @@ block content
     .form-container 
         if errorMessage
             span=errorMessage
-        form(action=`/videos${routes.upload}`, method="post", enctype="multipart/form-data")
+        form(method="post", enctype="multipart/form-data")
             label(for="upload") Video File
             input(type="file", id="file", name="videoFile", required=true, accept="video/*")
             input(type="text", placeholder="Title", name="title", required=true)
