@@ -119,4 +119,5 @@ package-lock.json
 /uploads
 /assets
 .env
+/build
 # /node_modules

@@ -1,7 +1,7 @@
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const BASE_JS = "./client/js/";
+const BASE_JS = "./src/client/js/";
 
 module.exports = {
     entry: {
@@ -10,8 +10,7 @@ module.exports = {
         recorder: BASE_JS + "recorder.js",
         commentSection: BASE_JS + "commentSection.js"
     },  //input같은 느낌
-    mode: "development",
-    watch: true,
+
     plugins: [new MiniCssExtractPlugin({
         filename: "css/styles.css",
     })],
