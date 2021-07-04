@@ -1,4 +1,8 @@
 extends layouts/main
+include mixins/videoBlock
 
 block content 
-    p userDetail
+    each video in user.videos 
+        +videoBlock(video)
+    else 
+        li Sorry nothing found.

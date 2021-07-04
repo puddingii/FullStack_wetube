@@ -20,8 +20,8 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,  //모든 scss파일을
-                use: {  // css로 가공
+                test: /\.js$/,  
+                use: {  
                     loader: "babel-loader",
                     options: {
                         presets: [["@babel/preset-env", {targets: "defaults"}]],
@@ -29,7 +29,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.scss$/,
+                test: /\.scss$/, //모든 scss파일을 css로 가공
                 use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],  //scss(css로바꿔줌)->css->styles(css code를 브라우저에 적용) 역순으로 실행이됨. minicss는 js랑 css코드를 분리시켜줌
             },
         ]

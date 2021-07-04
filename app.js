@@ -2,12 +2,14 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import flash from "express-flash"
 import MongoStore from "connect-mongo";
 import { localsMiddleware } from "./middlewares";
 import routes from "./routes";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 import globalRouter from "./routers/globalRouter";
+import apiRouter from "./routers/apiRouter";
 
 const app = express();
 
@@ -25,11 +27,13 @@ app.use(session({
     store:MongoStore.create({ mongoUrl: process.env.MONGO_URL}),  //세션들을 mongodb에 저장, 만약 이게 없다면 세션이 서버의 메모리에 저장
 }));
 
+app.use(flash());
 app.use(localsMiddleware);  //전역변수 느낌
 app.use("/uploads", express.static("uploads"));
 app.use("/static", express.static("assets"));
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter); // /user로 접속하면 /user의 router전체를 사용하겠다는 의미.
 app.use(routes.videos, videoRouter);  // 이것의 경우 /videos/etc.. 가 됨.
+app.use("/api", apiRouter);
 
 export default app;

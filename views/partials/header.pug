@@ -1,23 +1,40 @@
-header.header 
-    .header__column 
-        a(href=routes.home)
-            i.fab.fa-youtube
-    .header__column 
-        form(action=routes.search, method="get")
-            input(type="text", placeholder="Search by term..", name="term")
-    .header__column
-        ul 
+header.p-3.text-white
+    .container
+        .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+            a(href="/").d-flex.align-items-center.mb-2.mb-lg-0.text-white.text-decoration-none
+                i.fab.fa-youtube
+
+            ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
+                li
+                    a(href="#").nav-link.px-2.link-secondary Overview
+                li
+                    a(href="#").nav-link.px-2.text-white Inventory
+                li
+                    a(href="#").nav-link.px-2.text-white Customers
+                li
+                    a(href="#").nav-link.px-2.text-white Products
+
+            form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3(action=routes.search, method="get")
+                input.form-control(type="search", placeholder="Search...", aria-label="Search",  name="term")
+
             if !loggedIn
-                li 
-                    a(href=routes.join) Join
-                li 
-                    a(href=routes.login) Login
-            else 
-                li 
-                    a(href=`/videos${routes.upload}`) Upload
-                li 
-                    a(href='/users/editProfile') #{loggedInUser.name}'s Profile
-                li 
-                    a(href='/users/editProfile') Edit Profile
-                li 
-                    a(href='/users/logout') Log Out
+                button.btn.btn-outline-light.me-2(type="button", onclick=`location.href="${routes.join}"`) Join
+                button.btn.btn-outline-light.me-2(type="button", onclick=`location.href="${routes.login}"`) Login
+
+            else
+                .dropdown.text-end
+                    a.d-block.link-dark.text-decoration-none.dropdown-toggle(href="#", id="dropdownUser1", data-bs-toggle="dropdown", aria-expanded="false")
+                        img.rounded-circle(src=loggedInUser.avatarUrl, alt="mdo", width="32", height="32")
+                    
+                    ul.dropdown-menu.text-small(aria-labelledby="dropdownUser1")
+                        li 
+                            a.dropdown-item(href=`/videos${routes.upload}`) Upload
+                        li 
+                            a.dropdown-item(href=`/users/${loggedInUser._id}`) #{loggedInUser.name}'s Profile
+                        li 
+                            a.dropdown-item(href='/users/editProfile') Edit Profile
+                        li 
+                            a.dropdown-item(href='/users/logout') Log Out
+                        li
+                            hr.dropdown-divider
+    hr

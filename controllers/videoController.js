@@ -1,5 +1,6 @@
 import routes from "../routes";  //default export할 때는 {}를 사용하지않음
 import Video from "../models/Video";
+import User from "../models/User";
 
 export const home = async(req, res) => {
     try {
@@ -25,6 +26,7 @@ export const search = async(req, res) => {
 export const getUpload = (req, res) => res.render("upload", {pageTitle:"Upload"});
 export const postUpload = async(req, res) => {
     const {
+        session: { user: { _id }},
         body: { title, description, hashtags },
         file: { path }
     } = req;
@@ -33,8 +35,12 @@ export const postUpload = async(req, res) => {
             fileUrl: path,
             title,
             description,
+            owner: _id,
             hashtags: Video.formatHashtags(hashtags),
         });
+        const user = await User.findById(_id);
+        user.videos.push(newVideo._id);
+        user.save();
         return res.redirect(routes.videoDetail(newVideo.id));
     } catch(error) {
         return res.status(400).render("upload", { 
@@ -61,7 +67,7 @@ export const postUpload = async(req, res) => {
 
 export const videoDetail = async(req, res) => {
     const { id } = req.params;
-    const video = await Video.findById(id);
+    const video = await Video.findById(id).populate("owner"); //populate를 사용하면 ref에 해당하는 table에서 값을 찾아서 반환시켜줌. populate(relationship)
     if(!video) {
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
@@ -72,39 +78,71 @@ export const videoDetail = async(req, res) => {
 //get
 export const getEditVideo = async(req, res) => {
     const {
-        params: {id}
+        params: {id},
+        session: { user: { _id } }
     } = req;
     const video = await Video.findById(id);
     if(!video) {
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
+    if(String(video.owner) !== String(_id)) {
+        req.flash("error", "Not authorized");
+        return res.status(403).redirect("/");
+    }
     return res.render("editVideo", {pageTitle:`Edit ${video.title}`, video});
 }
 export const postEditVideo = async(req, res) => {
-    const { id } = req.params;
-    const { title, description, hashtags } = req.body;
+    const { 
+        params: { id },
+        body: { title, description, hashtags },
+        session: { user: { _id } }
+    } = req;
     const video = await Video.exists({ _id: id });
     if(!video) {
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
+    if(String(video.owner) !== String(_id)) {
+        req.flash("error", "You are not the owner of the video");
+        return res.status(403).redirect("/");
+    }
     await Video.findOneAndUpdate( {_id: id} , {  //findOneAndUpdate같은 경우 middleware가 없음. 그리고 document에 접근할 수가 없음.
         title, 
         description, 
         hashtags: Video.formatHashtags(hashtags)
     });
+    req.flash("success", "Change saved.");
     return res.redirect(routes.videoDetail(id));
 
 };
 
-
 export const deleteVideo = async(req, res) => {
     const {
-        params: {id}
+        params: {id},
+        session: { user: { _id } }
     } = req;
+    const video = await Video.findById(id);
+    
+    if(!video) {
+        return res.status(404).render("404", {pageTitle:"Video not found."});
+    } 
+    if(String(video.owner) !== String(_id)) {
+        return res.status(403).redirect("/");
+    }
     try {  //findByIdAndDelete는 findOneAndDelete({_id:id}) 를 줄인거임
         await Video.findByIdAndDelete(id); 
     } catch(err) {
         console.log(err);
     }
-    res.redirect(routes.home);
-}
+    return res.redirect(routes.home);
+};
+
+export const registerView = async(req, res) => {
+    const { id } = req.params;
+    const video = await Video.findById(id);
+    if(!video) {
+        return res.status(404).render("404", {pageTitle:"Video not found."});
+    }
+    video.meta.views = video.meta.views + 1;
+    await video.save();
+    return res.sendStatus(200);
+};

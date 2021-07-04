@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 import User from "../models/User";
+import Video from "../models/Video";
 import { async } from "regenerator-runtime"; //프론트엔드에서 async를 사용하려면 regenerator Runtime을 사용해야함.
 
 export const getJoin = (req, res) => {
@@ -62,11 +63,14 @@ export const postLogin = async (req, res) => {
     }
     req.session.loggedIn = true;    //세션에 정보추가
     req.session.user = user;
+    
     return res.redirect("/");
 };
 
 export const handleLogout = (req, res) => {
-    req.session.destroy();
+    req.session.user = null;
+    req.session.loggedIn = false;
+    req.flash("info", "Bye Bye");
     return res.redirect("/");
 };
 
@@ -143,7 +147,19 @@ export const finishGithubLogin = async (req, res) => {
     }
 };
 
-export const userDetail = (req, res) => res.render("userDetail", {pageTitle:"User Detail"});
+export const userDetail = async(req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id).populate("videos");
+    if(!user){
+
+        return res.status(404).render("404", { pageTitle: "User not found" });
+    }
+    return res.render("userDetail", {
+        pageTitle:`${user.name}'s Profile`, 
+        user,
+    });
+};
+
 export const getEdit = (req, res) => {
     res.render("editProfile", { pageTitle:"Edit Profile" });
 };
@@ -167,8 +183,10 @@ export const postEdit = async(req, res) => {
     req.session.user = updatedUser;  //db.만 업데이트하고 session은 업데이트된 상태가 아니므로 해줘야함.
     return res.render("editProfile", { pageTitle:"Edit Profile", message: "Success"});
 };
+
 export const getChangePassword = (req, res) => {
     if(req.session.user.socialOnly === true) {
+        req.flash("error", "Can't change password");
         return res.redirect("/");
     }
     return res.render("changePassword", { pageTitle:"Change Password" })
@@ -181,8 +199,9 @@ export const postChangePassword = async(req, res) => {
         },
         body: { oldPassword, newPassword, newPassword1 },
     } = req;
-    const user = User.findById( _id );
-    const ok = await bcrypt.compare(oldPassword, user.password);
+    const user = User.findById(_id);
+    const ok = await bcrypt.compare(oldPassword, user.password); //새로 해싱되지 않는 비번과 기존의 해싱된 비번을 비교해줌.
+
     if(!ok) {
         return res.status(400).render("changePassword", { 
             pageTitle:"Change Password", 
@@ -198,7 +217,6 @@ export const postChangePassword = async(req, res) => {
     
     user.password = newPassword;
     await user.save();
-
-
+    req.flash("info", "Password updated");
     return res.redirect("/users/logout")
 };

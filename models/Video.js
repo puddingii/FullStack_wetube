@@ -37,6 +37,11 @@ const VideoSchema = new mongoose.Schema({
         ref: "Comment"
     }],
     hashtags: [{ type: String, trim: true }],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User"  // objectId가 model의 User에서 온다고 알려주는것과 같음.
+    }
 });
 
 // VideoSchema.pre('save', async function() {  //this는 저장하고자 하는 문서를 가르킴, upload시 처리
