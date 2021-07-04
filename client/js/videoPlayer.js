@@ -97,7 +97,7 @@ const handleMouseLeave = () => {
     controlsTimeout = setTimeout(hideControls ,3000); // 마우스가 화면 밖으로 가면 3초 후에 사라지도록 설정
 };
 
-const handleEnded = () => {
+const handleEnded = () => { //data-id에 아이디값을 줘서 dataset의 안에 있는 data-뒷부분인 id를 변수로 하고 값을 가져옴.
     const { id } = videoContainer.dataset;
     fetch(`/api/videos/${id}/view`, {
         method: "post"

@@ -31,8 +31,26 @@ block content
         span.video__views #{video.meta.views} #{video.meta.views === 1 ? "view" : "views"}
         p.video__description=video.description
         p=video.hashtags
+        
     .video__comments 
         span.video__comment-number #{video.comments.length} #{video.comments.length === 1 ? "comment" : "comments"}
+    
+    if loggedIn
+        .video__comments 
+            form.video__comment-form#commentForm
+                textarea(cols="30", rows="10", placeholder="Comment")
+                button Add Comment
+    
+    .video__comments 
+        ul 
+            each comment in video.comments.reverse()
+                li.video__comment(data-id=comment._id)
+                    i.fas.fa-comment
+                    span  #{comment.text}
+                    if String(comment.owner._id) === String(loggedInUser._id)
+                        span#deleteComment ❌
 
 block scripts 
     script(src="/static/js/videoPlayer.js")
+    if loggedIn
+        script(src="/static/js/commentSection.js")

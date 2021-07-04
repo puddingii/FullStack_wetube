@@ -1,20 +1,26 @@
 import mongoose from "mongoose";
-import { localsMiddleware } from "../middlewares";
 
-const CommentSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
     text: {
         type: String,
-        required: "Text is required"
+        required: true
     },
     createdAt: {
         type: Date,
+        required: true,
         default: Date.now
     },
-    // video: {  //comment에 비디오 정보를 저장.
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Video"
-    // }
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User"  // objectId가 model의 User에서 온다고 알려주는것과 같음.
+    },
+    video: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Video"
+    }
 });
 
-const model = mongoose.model("Comment",CommentSchema);
-export default model;
+const Comment = mongoose.model("Comment", commentSchema);
+export default Comment;
