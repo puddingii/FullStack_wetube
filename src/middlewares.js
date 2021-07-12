@@ -1,5 +1,20 @@
 import multer from "multer";
 import routes from "./routes";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
+
+const s3 = new aws.S3({
+    credentials: {
+        accessKeyId: process.env.AWS_ID,
+        secretAccessKey: process.env.AWS_SECRET,
+    }
+});
+
+const multerUploader = multerS3({
+    s3: s3,
+    bucket: "puddingii-youtube",
+    acl: "public-read"
+});
 
 export const localsMiddleware = (req, res, next) => {
     res.locals.routes = routes;
@@ -32,12 +47,14 @@ export const uploadAvatar = multer({
     dest: "uploads/avatars/", 
     limits: {
         fileSize: 3000000, //3MB
-    } 
+    },
+    storage: multerUploader
 });
 
 export const uploadVideo = multer({ 
     dest: "uploads/videos/",
     limits: {
         fileSize: 100000000,  //100MB
-    } 
+    },
+    storage: multerUploader 
 });

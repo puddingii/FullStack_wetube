@@ -10,6 +10,8 @@ block content
         form(method="post", enctype="multipart/form-data")
             label(for="upload") Video File
             input(type="file", id="file", name="videoFile", required=true, accept="video/*")
+            label(for="thumb") Thumbnail File
+            input(type="file", id="thumb", name="thumbFile", required=true, accept="image/*")
             input(type="text", placeholder="Title", name="title", required=true)
             textarea(placeholder="Description", name="description", required=true, maxlength=100)
             input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags")

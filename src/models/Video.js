@@ -3,8 +3,11 @@ import mongoose from "mongoose";
 const VideoSchema = new mongoose.Schema({
     fileUrl: {
         type: String,
-        required: true,
-        trim: true
+        required: true
+    },
+    thumbUrl: {
+        type: String,
+        required: true
     },
     title: {
         type:String,

@@ -167,16 +167,21 @@ export const getEdit = (req, res) => {
 export const postEdit = async(req, res) => {
     const { 
         session: {
-            user: { _id },
+            user: { _id, avatarUrl },
         },
         body: { name, email, nickName, location },
+        file
     } = req;
+    const current = await User.findById(_id);
     const nickChk = await User.findOne({ nickName });
     const emailChk = await User.findOne({ email });
-    if(nickChk._id !== _id || emailChk._id !== _id ) {
+    if(current.name !== nickChk.name && nickChk._id !== _id) {
         return res.render("editProfile", { pageTitle:"Edit Profile", message: "Nickname or Email is duplicated."});
+    } else if(current.email !== nickChk.email && emailChk._id !== _id) {
+
     }
     const updatedUser = await User.findByIdAndUpdate(_id, {
+        avatarUrl: file ? file.location : avatarUrl,
         name, email, nickName, location
     }, { new: true }); //업데이트 된 내용을 반환하기 위한 new
     

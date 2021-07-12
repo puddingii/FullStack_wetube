@@ -2,7 +2,7 @@ extends layouts/main
 
 block content 
     div#videoContainer(data-id=video.id)
-        video(src=`/${video.fileUrl}`)
+        video(src=video.fileUrl)
         div#videoControls
             button#play Play 
             button#mute Mute 
