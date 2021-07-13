@@ -175,13 +175,15 @@ export const postEdit = async(req, res) => {
     const current = await User.findById(_id);
     const nickChk = await User.findOne({ nickName });
     const emailChk = await User.findOne({ email });
-    if(current.name !== nickChk.name && nickChk._id !== _id) {
-        return res.render("editProfile", { pageTitle:"Edit Profile", message: "Nickname or Email is duplicated."});
-    } else if(current.email !== nickChk.email && emailChk._id !== _id) {
+    const isHeroku = process.env.NODE_ENV === "production";
 
+    if(current.name !== nickChk.name && nickChk._id !== _id) {
+        return res.render("editProfile", { pageTitle:"Edit Profile", message: "Nickname is duplicated."});
+    } else if(current.email !== nickChk.email && emailChk._id !== _id) {
+        return res.render("editProfile", { pageTitle:"Edit Profile", message: "Email is duplicated."});
     }
     const updatedUser = await User.findByIdAndUpdate(_id, {
-        avatarUrl: file ? file.location : avatarUrl,
+        avatarUrl: file ? (isHeroku ? file.location : file.path ) : avatarUrl,
         name, email, nickName, location
     }, { new: true }); //업데이트 된 내용을 반환하기 위한 new
     

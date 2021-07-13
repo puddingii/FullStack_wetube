@@ -10,10 +10,18 @@ const s3 = new aws.S3({
     }
 });
 
-const multerUploader = multerS3({
-    s3: s3,
-    bucket: "puddingii-youtube",
-    acl: "public-read"
+const isHeroku = process.env.NODE_ENV === "production";
+
+const s3ImageUploader = multerS3({
+    s3,
+    bucket: "puddingii-youtube/images",
+    acl: "public-read" //access control list를 전달하기 위해 선언, acl은 기본적으로 object에 대한 권한임.
+});
+
+const s3VideoUploader = multerS3({
+    s3,
+    bucket: "puddingii-youtube/videos",
+    acl: "public-read" 
 });
 
 export const localsMiddleware = (req, res, next) => {
@@ -21,7 +29,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.siteName = 'WeTube';  //locals는 pug에서 그냥 가져다 쓸수있게해줌
     res.locals.loggedIn = Boolean(req.session.loggedIn);
     res.locals.loggedInUser = req.session.user || {};
-
+    res.locals.isHeroku = isHeroku;
     next();  //가운데에 있으닌까 next를 선언해줘야함.
 };
 
@@ -48,7 +56,7 @@ export const uploadAvatar = multer({
     limits: {
         fileSize: 3000000, //3MB
     },
-    storage: multerUploader
+    storage: isHeroku ? s3ImageUploader : undefined
 });
 
 export const uploadVideo = multer({ 
@@ -56,5 +64,5 @@ export const uploadVideo = multer({
     limits: {
         fileSize: 100000000,  //100MB
     },
-    storage: multerUploader 
+    storage: isHeroku ? s3VideoUploader : undefined
 });

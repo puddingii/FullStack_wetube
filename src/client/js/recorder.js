@@ -41,7 +41,7 @@ const handleDownload = async () => {
     const thumbUrl = URL.createObjectURL(thumbBlob);
 
     downloadFile(mp4Url, "MyRecording.mp4")
-    downloadFile(thumbUrl, "MyThumbnail.mp4")
+    downloadFile(thumbUrl, "MyThumbnail.jpg")
 
     ffmpeg.FS("unlink", files.input);
     ffmpeg.FS("unlink", files.output);
@@ -52,7 +52,7 @@ const handleDownload = async () => {
     URL.revokeObjectURL(thumbUrl);
 
     startBtn.disabled = false;
-    startBtn.disabled = "Record Again";
+    startBtn.innerText = "Record Again";
     startBtn.addEventListener("click", handleDownload);
 };
 

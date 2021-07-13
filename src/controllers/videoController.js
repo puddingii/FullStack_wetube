@@ -8,15 +8,12 @@ export const home = async(req, res) => {
         const videos = await Video.find({}).sort({_id: -1});
         return res.render("home", {pageTitle:"Home", videos});
     } catch(error) {
-        console.log(error);
         return res.render("home", {pageTitle:"Home", videos:[]});
     }
-    
 };
 export const search = async(req, res) => {
     const { term } = req.query;  //const searchingBy = req.query.term;
     let videos = [];
-    console.log(req.query);
     if(term) { //이것은 mongo DB가 하는것임
         videos = await Video.find({title: { $regex : new RegExp(term, "i") }})   //regular expression  i : 대소문자구분x
     } 
@@ -29,11 +26,13 @@ export const postUpload = async(req, res) => {
     const {
         session: { user: { _id }},
         body: { title, description, hashtags },
-        file: { path }
+        files: { videoFile, thumbFile }
     } = req;
+    const isHeroku = process.env.NODE_ENV === "production";
     try {
         const newVideo = await Video.create({  //이방식은 video에서 설정해둔 타입과 다른타입이면 오류를 발생시킴. 즉 try catch사용해야함
-            fileUrl: path,
+            fileUrl: isHeroku ? videoFile[0].location : videoFile[0].path,
+            thumbUrl: isHeroku ? thumbFile[0].location : thumbFile[0].path,
             title,
             description,
             owner: _id,
