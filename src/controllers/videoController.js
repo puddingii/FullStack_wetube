@@ -29,6 +29,7 @@ export const postUpload = async(req, res) => {
         files: { videoFile, thumbFile }
     } = req;
     const isHeroku = process.env.NODE_ENV === "production";
+    console.log(isHeroku);
     try {
         const newVideo = await Video.create({  //이방식은 video에서 설정해둔 타입과 다른타입이면 오류를 발생시킴. 즉 try catch사용해야함
             fileUrl: isHeroku ? videoFile[0].location : videoFile[0].path,
@@ -61,7 +62,7 @@ export const postUpload = async(req, res) => {
         hashtags: hashtags.split(".").map(word => word.startsWith('#') ? word : `#${word}`)
     });
     await newVideo.save();*/
-    // To Do: Upload and save video
+
 };
 
 
@@ -91,14 +92,16 @@ export const getEditVideo = async(req, res) => {
     }
     return res.render("editVideo", {pageTitle:`Edit ${video.title}`, video});
 }
+
 export const postEditVideo = async(req, res) => {
     const { 
         params: { id },
         body: { title, description, hashtags },
         session: { user: { _id } }
     } = req;
-    const video = await Video.exists({ _id: id });
+    const video = await Video.findById(id);
     if(!video) {
+        req.flash("error", "Video not found");
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
     if(String(video.owner) !== String(_id)) {
@@ -123,15 +126,17 @@ export const deleteVideo = async(req, res) => {
     const video = await Video.findById(id);
     
     if(!video) {
+        req.flash("error", "Video not found");
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
     if(String(video.owner) !== String(_id)) {
+        req.flash("error", "You are not the owner of the video");
         return res.status(403).redirect("/");
     }
     try {  //findByIdAndDelete는 findOneAndDelete({_id:id}) 를 줄인거임
         await Video.findByIdAndDelete(id); 
     } catch(err) {
-        console.log(err);
+        req.flash("error", "Video not found");
     }
     return res.redirect(routes.home);
 };
@@ -140,6 +145,7 @@ export const registerView = async(req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id);
     if(!video) {
+        req.flash("error", "Video not found");
         return res.status(404).render("404", {pageTitle:"Video not found."});
     }
     video.meta.views = video.meta.views + 1;
@@ -174,12 +180,14 @@ export const deleteComment = async(req, res) => {
         session: { user: { _id } }
     } = req;
     const comment = await Comment.findById(commentId).populate("owner").populate("video");
-    console.log(comment);
     const video = await Video.findById(comment.video._id);
+
     if(!comment || !video) {
+        req.flash("error", "Comment/Video not found");
         return res.status(404).render("404", {pageTitle:"Comment/Video not found."});
     } 
     if(String(comment.owner._id) !== String(_id)) {
+        req.flash("error", "You are not the owner of the video");
         return res.status(403).redirect("/");
     }
     try {  
@@ -187,6 +195,7 @@ export const deleteComment = async(req, res) => {
         video.comments = video.comments.filter((fil) => String(fil) !== String(commentId));
         await video.save();
     } catch(err) {
+        req.flash("error", "Delete Error");
         return res.status(404).render("404", {pageTitle:"Delete Error."});
     }
     return res.sendStatus(200);

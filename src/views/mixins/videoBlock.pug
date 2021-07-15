@@ -1,9 +1,10 @@
 mixin videoBlock(video = {})
     .col
         .card.chadow-sm.videoBlock
-            //.video-mixin__thumb(style=`background-image:url(${video.thumbUrl});background-size:cover;background-position:center;`)
-            //.bd-placeholder-img.card-img-top(src=video.fileUrl, controls=true, width="100%", height="225") 
-            .bd-placeholder-img.card-img-top(style=`background-image:url(${video.thumbUrl});background-size:cover;background-position:center;height:225px;`)
+            if isHeroku
+                img.bd-placeholder-img.card-img-top(src=video.thumbUrl, style="background-size:cover;background-position:center;width=100%;height:225px;")
+            else
+                img.bd-placeholder-img.card-img-top(src=`/${video.thumbUrl}`, style="background-size:cover;background-position:center;width=100%;height:225px;")
             .card-body 
                 h2=video.title
                 p
@@ -12,4 +13,4 @@ mixin videoBlock(video = {})
             .d-flex.justify-content-between.align-items-center
                 .btn-group
                     button.btn.btn-sm.btn-outline-secondary(onclick=`location.href="${routes.videoDetail(video.id)}"`) View
-            small.text-muted #{video.meta.views} views | #{video.createdAt}
+            small.text-muted #{video.meta.views} views | #{video.createdAt.getFullYear()}.#{video.createdAt.getMonth()}.#{video.createdAt.getDay()}

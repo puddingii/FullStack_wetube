@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 import User from "../models/User";
-import Video from "../models/Video";
 import { async } from "regenerator-runtime"; //프론트엔드에서 async를 사용하려면 regenerator Runtime을 사용해야함.
 
 export const getJoin = (req, res) => {

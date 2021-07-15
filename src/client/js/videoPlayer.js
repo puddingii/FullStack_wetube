@@ -22,7 +22,7 @@ const handlePlayClick = () => { //HTML Media Element에 있음.
     } else {
         video.pause();
     }
-    playBtn.innerText = video.paused ? "Play" : "Pause";
+    playBtn.className = video.paused ? "fas fa-play" : "fas fa-pause";
 };
 
 const handleMute = () => {
@@ -32,14 +32,14 @@ const handleMute = () => {
         video.muted = true;
     }
     volumeRange.value =video.muted ? 0 : volumeValue;
-    muteBtn.innerText = video.muted ? "Unmute" : "Mute";
+    muteBtn.className = video.muted ? "fas fa-volume-mute" : "fas fa-volume-down";
 };
 
 const handleVolumeChange = (event) => {
     const { target: { value } } = event;
     if(video.muted) {
         video.muted = false;
-        muteBtn.innerText = "Mute";
+        muteBtn.className = "fas fa-volume-mute";
     }
     volumeValue = value;
     video.volume = value;
@@ -70,15 +70,15 @@ const handleFullscreen = () => {
     const fullscreen = document.fullscreenElement;
     if(fullscreen) {
         document.exitFullscreen();
-        fullScreenBtn.innerText = "Enter Full Screen";
+        fullScreenBtn.className = "fas fa-expand";
         
     } else {
         videoContainer.requestFullscreen();
-        fullScreenBtn.innerText = "Exit Full Screen";
+        fullScreenBtn.className = "fas fa-compress";
     }
 };
 
-const hideControls = () => videoControls.classList.remove("showing");
+const hideControls = () => videoControls.classList.remove("mouseOn");
 
 const handleMouseMove = () => {
     if(controlsTimeout) { // 나가고 다시 들어갈때 사라지는 것을 취소해야하기 때문에 설정.
@@ -89,8 +89,8 @@ const handleMouseMove = () => {
         clearTimeout(controlsMouseStop);
         controlsMouseStop = null;
     }
-    videoControls.classList.add("showing");
-    controlsMouseStop = setTimeout(hideControls, 3000); // 3초 뒤에 showing을 없애주지만 만약 계속 마우스를 움직인다면 초가 계속 갱신됨.
+    videoControls.classList.add("mouseOn");
+    controlsMouseStop = setTimeout(hideControls, 3000); // 3초 뒤에 mouseOn을 없애주지만 만약 계속 마우스를 움직인다면 초가 계속 갱신됨.
 };
 
 const handleMouseLeave = () => {
@@ -98,6 +98,7 @@ const handleMouseLeave = () => {
 };
 
 const handleEnded = () => { //data-id에 아이디값을 줘서 dataset의 안에 있는 data-뒷부분인 id를 변수로 하고 값을 가져옴.
+    playBtn.className = "fas fa-play";
     const { id } = videoContainer.dataset;
     fetch(`/api/videos/${id}/view`, {
         method: "post"

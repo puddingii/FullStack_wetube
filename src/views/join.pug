@@ -1,19 +1,37 @@
 extends layouts/main
 
 block content 
-    .form-container 
+    div.form-container 
         if errorMessage 
             span=errorMessage
-        form(action=routes.join, method="post")
-            input(type="text", name="nickName", placeholder="NickName", required)
-            input(type="email", name="email", placeholder="Email", required)
-            input(type="text", name="name", placeholder="Full Name", required)
-            input(type="password", name="password", placeholder="Password", required)
-            input(type="password", name="password2", placeholder="Verify Password", required)
-            input(type="text", name="location", placeholder="Location", required)
-            input(type="submit", value="Join")
-        hr
-        div 
-            span Already have an account?
-            a(href="/login") Log in now &rarr;
+        form(method="post")
+            div.row.g-3
+                div.col-12
+                    label.form-label(for="nickName") NickName
+                    div.input-group
+                        span.input-group-text #
+                        input.form-control#nickName(type="text", name="nickName", placeholder="NickName", required)
+
+                div.col-12
+                    label.form-label(for="email") Email
+                    input.form-control#email(type="email", name="email", placeholder="xxx@example.com", required)
+
+                div.col-12
+                    label.form-label(for="name") Name
+                    input.form-control(type="text", name="name", placeholder="Full Name", required)
+
+                div.col-sm-6
+                    label.form-label(for="password") Password
+                    input.form-control(type="password", name="password", placeholder="Password", required)
+                
+                div.col-sm-6
+                    label.form-label(for="password2") Verify Password
+                    input.form-control(type="password", name="password2", placeholder="Verify Password", required)
+
+                div.col-12
+                    label.form-label(for="location") Location
+                    input.form-control(type="text", name="location", placeholder="Location")
+
+                input.btn.btn-secondary(type="submit", value="Join")
+
         include partials/socialLogin

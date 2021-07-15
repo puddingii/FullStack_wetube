@@ -1,7 +1,7 @@
 import multer from "multer";
-import routes from "./routes";
-import multerS3 from "multer-s3";
 import aws from "aws-sdk";
+import multerS3 from "multer-s3";
+import routes from "./routes";
 
 const s3 = new aws.S3({
     credentials: {
@@ -62,7 +62,7 @@ export const uploadAvatar = multer({
 export const uploadVideo = multer({ 
     dest: "uploads/videos/",
     limits: {
-        fileSize: 100000000,  //100MB
+        fileSize: 10000000,  //10MB
     },
     storage: isHeroku ? s3VideoUploader : undefined
 });

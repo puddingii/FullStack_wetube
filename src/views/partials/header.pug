@@ -23,12 +23,12 @@ header.p-3.text-white
 
             else
                 .dropdown.text-end
-                    a.d-block.link-dark.text-decoration-none.dropdown-toggle(href="#", id="dropdownUser1", data-bs-toggle="dropdown", aria-expanded="false")
+                    a.d-block.link-dark.text-decoration-none.dropdown-toggle(href="#", id="dropdownUser", data-bs-toggle="dropdown", aria-expanded="false")
                         if loggedInUser.avatarUrl
                             img.rounded-circle(src=loggedInUser.avatarUrl, alt="mdo", width="32", height="32")
 
                     
-                    ul.dropdown-menu.text-small(aria-labelledby="dropdownUser1")
+                    ul.dropdown-menu.text-small(aria-labelledby="dropdownUser")
                         li 
                             a.dropdown-item(href=`/videos${routes.upload}`) Upload
                         li 

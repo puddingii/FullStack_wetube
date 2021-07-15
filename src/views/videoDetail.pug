@@ -2,19 +2,24 @@ extends layouts/main
 
 block content 
     div#videoContainer(data-id=video.id)
-        video(src=video.fileUrl)
-        div#videoControls
-            button#play Play 
-            button#mute Mute 
-            input(type="range", step="0.1", value=0.5, min="0", max="1")#volume
-            div 
-                span#currentTime 00:00
-                span  / 
-                span#totalTime 00:00
-            div
-                input(type="range", step="1", value=0, min="0")#timeline
-            div 
-                button#fullScreen Enter Full Screen
+        if isHeroku
+            video(src=video.fileUrl, width="100%", height="400")
+        else 
+            video(src="/" + video.fileUrl, width="100%", height="400")
+        div#videoControlWidth
+            div#videoControls
+                i.fas.fa-play#play &nbsp
+                i.fas.fa-volume-down#mute &nbsp
+                input(type="range", step="0.1", value=0.5, min="0", max="1")#volume
+                div 
+                    span#currentTime 00:00
+                    span  / 
+                    span#totalTime 00:00
+                div
+                    input(type="range", step="1", value=0, min="0")#timeline
+                p &nbsp
+                div 
+                    i.fas.fa-expand#fullScreen
 
 
     .video__info 
