@@ -72,6 +72,15 @@ export const videoDetail = async(req, res) => {
     if(!video) {
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
+    // const commentOwner = [];
+    // (async function(comments) {
+    //     for(const comment of comments) {
+    //         const userData = await User.findById(comment.owner);
+    //         commentOwner.push(userData);
+    //     }
+    //     console.log(commentOwner)
+    //     return res.render("videoDetail", { pageTitle:video.title, video });
+    // })(video.comments);
     return res.render("videoDetail", { pageTitle:video.title, video });
 };
 

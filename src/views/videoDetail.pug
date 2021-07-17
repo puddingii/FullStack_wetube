@@ -20,37 +20,45 @@ block content
                 p &nbsp
                 div 
                     i.fas.fa-expand#fullScreen
-
-
+    
+    br
     .video__info 
-        if String(video.owner._id) === String(loggedInUser._id)
-            a(href=routes.editVideo(video.id)) Edit video
-            br
-            a(href=routes.deleteVideo(video.id)) Delete Video
+        p.hashtag=video.hashtags
+
+        h2.video__title=video.title
+        p.metaData 조회수 #{video.meta.views}회 | #{video.createdAt.getFullYear()}. #{video.createdAt.getMonth()}. #{video.createdAt.getDay()}
+
+        hr
         div
-            h5.video__title=video.title
-            small=video.createdAt
-        small Uploaded by 
-            a(href=`/users/${video.owner._id}`) #{video.owner.name}
+            a(href=`/users/${video.owner._id}`)
+                img.rounded-circle(src=video.owner.avatarUrl, width="32", height="32") 
+                |   #{video.owner.nickName}
         br
-        span.video__views #{video.meta.views} #{video.meta.views === 1 ? "view" : "views"}
         p.video__description=video.description
-        p=video.hashtags
-        
+        br
+        if String(video.owner._id) === String(loggedInUser._id)
+            button.btn.btn-outline-secondary(type="button", onclick=`location.href='${routes.editVideo(video.id)}'`) Edit
+            button.btn.btn-outline-danger(type="button", onclick=`location.href='${routes.deleteVideo(video.id)}'`) Delete
+        hr
+
+
     .video__comments 
-        span.video__comment-number #{video.comments.length} #{video.comments.length === 1 ? "comment" : "comments"}
+        p Comment - 
+            span.video__comment-number #{video.comments.length}
     
     if loggedIn
         .video__comments 
             form.video__comment-form#commentForm
-                textarea(cols="30", rows="10", placeholder="Comment")
-                button Add Comment
+                textarea(cols="30", rows="2", placeholder="Comment", wrap="hard")
+                button.btn.btn-primary Comment
     
     .video__comments 
         ul 
             each comment in video.comments.reverse()
                 li.video__comment(data-id=comment._id)
-                    i.fas.fa-comment
+                    //- a(href=`/users/${comment.owner._id}`)
+                    //-     img.rounded-circle(src=comment.avatarUrl, width="32", height="32") 
+                    //-     p=comment.nickName 
                     span  #{comment.text}
                     if String(comment.owner._id) === String(loggedInUser._id)
                         span#deleteComment ❌

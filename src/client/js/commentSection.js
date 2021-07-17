@@ -42,7 +42,7 @@ const handleSubmit = async (event) => {
     if(response.status === 201) {
         const { newCommentId } = await response.json(); //response를 json형식으로 받기위해 적음. 받는 이유가 response의 json을 추출하기 위함임. json에는 컨트롤러에서 보내준 id값이 들어가 있음
         addComment(text, newCommentId);
-        commentNumber.innerText = `${parseInt(commentNumber.innerText, 10) + 1} comments`
+        commentNumber.innerText = `${parseInt(commentNumber.innerText, 10) + 1}`
     }
     
 };
@@ -56,7 +56,7 @@ const handleDelete = async(event) => {
     });
     if(response.status === 200) {
         videoComments.removeChild(li);
-        commentNumber.innerText = `${parseInt(commentNumber.innerText, 10) - 1} comments`
+        commentNumber.innerText = `${parseInt(commentNumber.innerText, 10) - 1}`
     }
 };
 
