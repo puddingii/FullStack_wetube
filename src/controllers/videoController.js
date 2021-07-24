@@ -15,7 +15,7 @@ export const search = async(req, res) => {
     const { term } = req.query;  //const searchingBy = req.query.term;
     let videos = [];
     if(term) { //이것은 mongo DB가 하는것임
-        videos = await Video.find({title: { $regex : new RegExp(term, "i") }})   //regular expression  i : 대소문자구분x
+        videos = await Video.find({title: { $regex : new RegExp(term, "i") }});  //regular expression  i : 대소문자구분x
     } 
     return res.render("search", {pageTitle:"Search", term, videos});
 };
@@ -29,7 +29,7 @@ export const postUpload = async(req, res) => {
         files: { videoFile, thumbFile }
     } = req;
     const isHeroku = process.env.NODE_ENV === "production";
-    console.log(isHeroku);
+
     try {
         const newVideo = await Video.create({  //이방식은 video에서 설정해둔 타입과 다른타입이면 오류를 발생시킴. 즉 try catch사용해야함
             fileUrl: isHeroku ? videoFile[0].location : videoFile[0].path,
@@ -44,25 +44,9 @@ export const postUpload = async(req, res) => {
         user.save();
         return res.redirect(routes.videoDetail(newVideo.id));
     } catch(error) {
-        return res.status(400).render("upload", { 
-            pageTitle: "Upload", 
-            errorMessage: error._message
-        });
+        req.flash("error", error._message);
+        return res.status(400).render("upload", { pageTitle: "Upload" });
     }
-    
-    /*const newVideo = new Video({
-        fileUrl: path,
-        title,
-        description,
-        meta: {
-            views: 0,
-            rating: 0,
-        },
-        createdAt: Date.now(),
-        hashtags: hashtags.split(".").map(word => word.startsWith('#') ? word : `#${word}`)
-    });
-    await newVideo.save();*/
-
 };
 
 
@@ -100,7 +84,7 @@ export const getEditVideo = async(req, res) => {
         return res.status(403).redirect("/");
     }
     return res.render("editVideo", {pageTitle:`Edit ${video.title}`, video});
-}
+};
 
 export const postEditVideo = async(req, res) => {
     const { 
@@ -173,6 +157,7 @@ export const createComment = async(req, res) => {
     if(!video) {
         return res.sendStatus(404);
     }
+    console.log(text);
     const comment = await Comment.create({
         text,
         owner: user._id,

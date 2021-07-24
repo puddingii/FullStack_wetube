@@ -4,6 +4,7 @@
 @import "./components/header.scss";
 @import "./screens/join.scss";
 @import "./screens/videoDetail.scss";
+@import "./screens/upload.scss";
 
 a {
   color: inherit;
@@ -22,6 +23,15 @@ body {
 
 .videoBlock {
   background-color: $bg;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes goAway {
@@ -49,6 +59,10 @@ body {
   animation-delay: 5s;
   &.error {
     background-color: tomato;
+    color: white;
+  }
+  &.success {
+    background-color: #32eb79;
     color: white;
   }
 }

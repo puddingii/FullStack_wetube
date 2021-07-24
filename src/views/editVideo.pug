@@ -3,7 +3,14 @@ extends layouts/main
 block content 
     .form-container 
         form(method="post")
-            input(type="text", placeholder="Title", name="title", required=true, value=video.title)
-            textarea(placeholder="Description", name="description", required=true, maxlength=100)=video.description
-            input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags", value=video.hashtags.join())
-            input(type="submit", value="Update Video")
+            div.row.g-3
+                div.col-12 
+                    label.form-label(for="title") Title
+                    input.form-control(id="title", type="text", name="title", placeholder="Title", required=true, value=video.title)
+                div.col-12 
+                    label.form-label(for="description") Description
+                    textarea.form-control(id="description", placeholder="Description", name="description", required=true, maxlength=100)=video.description
+                div.col-12 
+                    label.form-label(for="hashtag") Hashtag
+                    input.form-control(id="hashtag", type="text", placeholder="Hashtags, seperated by Comma", name="hashtags", value=video.hashtags.join())
+                input.btn.btn-secondary(type="submit", value="Submit")

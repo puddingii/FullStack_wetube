@@ -30,6 +30,7 @@ export const localsMiddleware = (req, res, next) => {
     res.locals.loggedIn = Boolean(req.session.loggedIn);
     res.locals.loggedInUser = req.session.user || {};
     res.locals.isHeroku = isHeroku;
+    res.locals.port = process.env.PORT;
     next();  //가운데에 있으닌까 next를 선언해줘야함.
 };
 

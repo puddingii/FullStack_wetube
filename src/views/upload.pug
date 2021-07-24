@@ -1,21 +1,28 @@
 extends layouts/main
 
 block content 
-    div 
+    div.form-container
         video#preview
-        button#startBtn Start Recording
+        button.btn.btn-outline-danger#startBtn Start Recording
     .form-container 
-        if errorMessage
-            span=errorMessage
         form(method="post", enctype="multipart/form-data")
-            label(for="videoFile") Video File
-            input(type="file", id="videoFile", name="videoFile", required=true, accept="video/*")
-            label(for="thumbFile") Thumbnail File
-            input(type="file", id="thumbFile", name="thumbFile", required=true, accept="image/*")
-            input(type="text", placeholder="Title", name="title", required=true)
-            textarea(placeholder="Description", name="description", required=true, maxlength=100)
-            input(type="text", placeholder="Hashtags, seperated by Comma", name="hashtags")
-            input(type="submit", value="Upload Video")
+            div.row.g-3
+                div.col-12
+                    label.form-label(for="videoFile") Video File 
+                    input.form-control(type="file", id="videoFile", name="videoFile", required=true, accept="video/*")
+                div.col-12
+                    label.form-label(for="thumbFile") Thumbnail File 
+                    input.form-control(type="file", id="thumbFile", name="thumbFile", required=true, accept="image/*")
+                div.col-12 
+                    label.form-label(for="title") Title
+                    input.form-control(id="title", type="text", name="title", placeholder="Title", required=true)
+                div.col-12 
+                    label.form-label(for="description") Description
+                    textarea.form-control(id="description", placeholder="Description", name="description", required=true, maxlength=100)
+                div.col-12 
+                    label.form-label(for="hashtag") Hashtag
+                    input.form-control(id="hashtag", type="text", placeholder="Hashtags, seperated by Comma", name="hashtags")
+                input.btn.btn-secondary(type="submit", value="Submit")
 
 block scripts 
     script(src="/static/js/recorder.js")

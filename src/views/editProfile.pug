@@ -2,16 +2,25 @@ extends layouts/main
 
 block content 
     .form-container 
-        img(src=loggedInUser.avatarUrl, width="100", height="100")
         p=message
         form(method="post", enctype="multipart/form-data")
-            label(for="avatar") Avatar
-            input(type="file", id="avatar", name="avatar", accept="image/*")
-            input(type="text", name="nickName", placeholder="NickName", required, value=loggedInUser.nickName)
-            input(type="email", name="email", placeholder="Email", required, value=loggedInUser.email)
-            input(type="text", name="name", placeholder="Full Name", required, value=loggedInUser.name)
-            input(type="text", name="location", placeholder="Location", required, value=loggedInUser.location)
-            input(type="submit", value="Update Profile")
-            if !loggedInUser.socialOnly
-                hr
-                a.form-container__link(href=`/users${routes.changePassword}`) Change Password
+            div.row.g-3
+                div.col-12
+                    label.form-label(for="avatar") Avatar
+                    input.form-control(type="file", id="avatar", name="avatar", accept="image/*")
+                div.col-12 
+                    label.form-label(for="title") NickName
+                    input.form-control(id="title", type="text", name="nickName", placeholder="NickName", required, value=loggedInUser.nickName)
+                div.col-12 
+                    label.form-label(for="email") Description
+                    input.form-control(id="email", type="email", name="email", placeholder="Email", required, value=loggedInUser.email)
+                div.col-12 
+                    label.form-label(for="name") Full Name
+                    input.form-control(id="name", type="text", name="name", placeholder="Full Name", required, value=loggedInUser.name)
+                div.col-12 
+                    label.form-label(for="location") Location
+                    input.form-control(id="location", type="text", name="location", placeholder="Location", value=loggedInUser.location)
+                if !loggedInUser.socialOnly
+                    hr
+                    a.form-container__link(href=`/users${routes.changePassword}`) Change Password
+                input.btn.btn-secondary(type="submit", value="Submit")
