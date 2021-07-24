@@ -11,18 +11,14 @@ export const postJoin = async (req,res) => {
     const {name, nickName, email, password, password2, location} = req.body;
     const pageTitle = "Join";
     if(password !== password2) {
-        return res.status(400).render("join", {
-            pageTitle,
-            errorMessage: "Password confirmation does not match."
-        });
+        req.flash("error", "Password confirmation does not match.");
+        return res.status(400).render("join", { pageTitle });
     }
 
     const exists = await User.exists({ $or: [ { nickName }, { email } ] });  //email이나 nickName둘중 하나라도 있으면 exists는 True
     if (exists) {
-        return res.status(400).render("join", {  //상태 코드 400을 가지고 render를 하게됨.
-            pageTitle,
-            errorMessage: "This nickName/email is already taken."
-        });
+        req.flash("error", "This nickName/email is already taken.");
+        return res.status(400).render("join", { pageTitle }); //상태 코드 400을 가지고 render를 하게됨.
     }
     try {
         await User.create({
@@ -32,12 +28,11 @@ export const postJoin = async (req,res) => {
             password,
             location,
         });
+        req.flash("success", "Account is created.");
         return res.redirect("/login");
     } catch(error) {
-        return res.status(400).render("join", { 
-            pageTitle, 
-            errorMessage: "DB Error"
-        });
+        req.flash("error", "DB Error.");
+        return res.status(400).render("join", { pageTitle });
     }
 };
 
@@ -47,18 +42,14 @@ export const postLogin = async (req, res) => {
     const pageTitle = "Login";
     const user = await User.findOne( { nickName, socialOnly: false });
     if(!user) {    //check if account exists
-        return res.status(400).render("login", { 
-            pageTitle, 
-            errorMessage: "An account with this nickName does not exist."
-        });
+        req.flash("error", "This Nickname does not exist.");
+        return res.status(400).render("login", { pageTitle });
     }
     //check if password correct
     const ok = await bcrypt.compare(password, user.password);
     if(!ok) {
-        return res.status(400).render("login", { 
-            pageTitle, 
-            errorMessage: "Wrong password"
-        });
+        req.flash("error", "Wrong password.");
+        return res.status(400).render("login", { pageTitle });
     }
     req.session.loggedIn = true;    //세션에 정보추가
     req.session.user = user;
@@ -123,7 +114,8 @@ export const finishGithubLogin = async (req, res) => {
             (email) => email.primary === true && email.verified === true
         );
         if(!emailObj) {
-            // 알람 추가해야함
+            //다시 확인해봐야함
+            req.flash("error", "This github account is disabled.");
             return res.redirect("/login");
         }
         let user = await User.findOne( { email: emailObj.email });
@@ -142,6 +134,7 @@ export const finishGithubLogin = async (req, res) => {
         req.session.user = user;
         return res.redirect("/");
     } else { //access token이 없을 경우
+        req.flash("error", "There is no access token.");
         return res.redirect("/login");
     }
 };
@@ -150,7 +143,6 @@ export const userDetail = async(req, res) => {
     const { id } = req.params;
     const user = await User.findById(id).populate("videos");
     if(!user){
-
         return res.status(404).render("404", { pageTitle: "User not found" });
     }
     return res.render("userDetail", {
@@ -168,7 +160,7 @@ export const postEdit = async(req, res) => {
         session: {
             user: { _id, avatarUrl },
         },
-        body: { name, email, nickName, location },
+        body: { nickName, email, name, location },
         file
     } = req;
     const current = await User.findById(_id);
@@ -176,10 +168,13 @@ export const postEdit = async(req, res) => {
     const emailChk = await User.findOne({ email });
     const isHeroku = process.env.NODE_ENV === "production";
 
-    if(current.name !== nickChk.name && nickChk._id !== _id) {
-        return res.render("editProfile", { pageTitle:"Edit Profile", message: "Nickname is duplicated."});
-    } else if(current.email !== nickChk.email && emailChk._id !== _id) {
-        return res.render("editProfile", { pageTitle:"Edit Profile", message: "Email is duplicated."});
+    if(current.nickName !== nickName && nickChk._id !== _id) {
+        req.flash("error", "Nickname is duplicated.");
+        return res.render("editProfile", { pageTitle:"Edit Profile" });
+    } 
+    if(current.email !== email && emailChk._id !== _id) {
+        req.flash("error", "Email is duplicated.");
+        return res.render("editProfile", { pageTitle:"Edit Profile" });
     }
     const updatedUser = await User.findByIdAndUpdate(_id, {
         avatarUrl: file ? (isHeroku ? file.location : file.path ) : avatarUrl,
@@ -187,7 +182,8 @@ export const postEdit = async(req, res) => {
     }, { new: true }); //업데이트 된 내용을 반환하기 위한 new
     
     req.session.user = updatedUser;  //db.만 업데이트하고 session은 업데이트된 상태가 아니므로 해줘야함.
-    return res.render("editProfile", { pageTitle:"Edit Profile", message: "Success"});
+    req.flash("success", "Success");
+    return res.render("editProfile", { pageTitle:"Edit Profile" });
 };
 
 export const getChangePassword = (req, res) => {
@@ -205,24 +201,19 @@ export const postChangePassword = async(req, res) => {
         },
         body: { oldPassword, newPassword, newPassword1 },
     } = req;
-    const user = User.findById(_id);
+    const user = await User.findById(_id);
     const ok = await bcrypt.compare(oldPassword, user.password); //새로 해싱되지 않는 비번과 기존의 해싱된 비번을 비교해줌.
 
     if(!ok) {
-        return res.status(400).render("changePassword", { 
-            pageTitle:"Change Password", 
-            message:"The current password is incorrect" 
-        });
+        req.flash("error", "The current password is incorrect.");
+        return res.status(400).render("changePassword", { pageTitle:"Change Password" });
     }
     if(newPassword !== newPassword1) {
-        return res.status(400).render("changePassword", { 
-            pageTitle:"Change Password", 
-            message:"The password does not match the confirmation" 
-        });
+        req.flash("error", "The password does not match the confirmation.");
+        return res.status(400).render("changePassword", { pageTitle:"Change Password" });
     }
     
     user.password = newPassword;
     await user.save();
-    req.flash("info", "Password updated");
     return res.redirect("/users/logout")
 };

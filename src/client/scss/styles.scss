@@ -57,6 +57,10 @@ body {
   text-align: center;
   animation: goAway 0.5s ease-in-out forwards;
   animation-delay: 5s;
+  &.info {
+    background-color: goldenrod;
+    color: white;
+  }
   &.error {
     background-color: tomato;
     color: white;

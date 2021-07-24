@@ -2,7 +2,10 @@ extends layouts/main
 include mixins/videoBlock
 
 block content 
-    each video in user.videos 
-        +videoBlock(video)
-    else 
-        li Sorry nothing found.
+    .album.py-5
+        .container
+            .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3 
+                each video in user.videos 
+                    +videoBlock(video)
+                else 
+                    li Sorry nothing found.

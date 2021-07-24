@@ -2,10 +2,12 @@ extends layouts/main
 include mixins/videoBlock
 
 block content 
-    .search__header 
-        h3 Searching for: #{term}
-    .search__videos 
-        if videos.length === 0
-            h5 No Videos Found
-        each item in videos
-            +videoBlock(item)
+    h3.search__header  Searching for: #{term}
+
+    .album.py-5
+        .container
+            .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3 
+                if videos.length === 0
+                    h5 No Videos Found
+                each item in videos
+                    +videoBlock(item)

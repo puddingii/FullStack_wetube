@@ -2,7 +2,6 @@ extends layouts/main
 
 block content 
     .form-container 
-        p=message
         form(method="post", enctype="multipart/form-data")
             div.row.g-3
                 div.col-12
@@ -12,7 +11,7 @@ block content
                     label.form-label(for="title") NickName
                     input.form-control(id="title", type="text", name="nickName", placeholder="NickName", required, value=loggedInUser.nickName)
                 div.col-12 
-                    label.form-label(for="email") Description
+                    label.form-label(for="email") Email
                     input.form-control(id="email", type="email", name="email", placeholder="Email", required, value=loggedInUser.email)
                 div.col-12 
                     label.form-label(for="name") Full Name
@@ -22,5 +21,5 @@ block content
                     input.form-control(id="location", type="text", name="location", placeholder="Location", value=loggedInUser.location)
                 if !loggedInUser.socialOnly
                     hr
-                    a.form-container__link(href=`/users${routes.changePassword}`) Change Password
+                    a.form-container__link(href=`/users${routes.changePassword}`) Change Password &rarr;
                 input.btn.btn-secondary(type="submit", value="Submit")
