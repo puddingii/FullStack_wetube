@@ -53,19 +53,13 @@ export const postUpload = async(req, res) => {
 export const videoDetail = async(req, res) => {
     const { id } = req.params;
     const video = await Video.findById(id).populate("owner").populate("comments"); //populate를 사용하면 ref에 해당하는 table에서 값을 찾아서 반환시켜줌. populate(relationship)
+    const comments = await Comment.find( { "video": id }).populate("owner");
+
     if(!video) {
         return res.status(404).render("404", {pageTitle:"Video not found."});
     } 
-    // const commentOwner = [];
-    // (async function(comments) {
-    //     for(const comment of comments) {
-    //         const userData = await User.findById(comment.owner);
-    //         commentOwner.push(userData);
-    //     }
-    //     console.log(commentOwner)
-    //     return res.render("videoDetail", { pageTitle:video.title, video });
-    // })(video.comments);
-    return res.render("videoDetail", { pageTitle:video.title, video });
+
+    return res.render("videoDetail", { pageTitle:video.title, video, comments });
 };
 
 
@@ -127,9 +121,12 @@ export const deleteVideo = async(req, res) => {
         return res.status(403).redirect("/");
     }
     try {  //findByIdAndDelete는 findOneAndDelete({_id:id}) 를 줄인거임
+        video.comments.forEach( async(comment) => {
+            await Comment.findByIdAndDelete(comment);
+        });
         await Video.findByIdAndDelete(id); 
     } catch(err) {
-        req.flash("error", "Video not found");
+        req.flash("error", "Video Error");
     }
     return res.redirect(routes.home);
 };

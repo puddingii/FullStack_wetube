@@ -21,7 +21,7 @@ header.p-3.text-white
                                 if isHeroku
                                     img.rounded-circle(src=loggedInUser.avatarUrl, width="32", height="32")
                                 else 
-                                    img.rounded-circle(src=`http://localhost:${port}/`+loggedInUser.avatarUrl, width="32", height="32")
+                                    img.rounded-circle(src=`/${loggedInUser.avatarUrl}`, width="32", height="32")
                             else 
                                 span.dot
 

@@ -54,11 +54,11 @@ block content
     
     .video__comments 
         ul 
-            each comment in video.comments.reverse()
+            each comment in comments.reverse()
                 li.video__comment(data-id=comment._id)
-                    //- a(href=`/users/${comment.owner._id}`)
-                    //-     img.rounded-circle(src=comment.avatarUrl, width="32", height="32") 
-                    //-     p=comment.nickName 
+                    a(href=`/users/${comment.owner._id}`)
+                        img.rounded-circle(src=`/${comment.owner.avatarUrl}`, width="32", height="32") 
+                        p=comment.owner.nickName 
                     span  #{comment.text}
                     if String(comment.owner._id) === String(loggedInUser._id)
                         span#deleteComment ❌
