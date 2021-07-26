@@ -6,8 +6,8 @@ block content
 
     .album.py-5
         .container
-            .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3 
+            .row.row-cols-1.row-cols-sm-2.row-cols-md-4.g-3 
                 if videos.length === 0
                     h5 No Videos Found
-                each item in videos
+                each item in videos.reverse()
                     +videoBlock(item)

@@ -31,7 +31,10 @@ block content
         hr
         div
             a(href=`/users/${video.owner._id}`)
-                img.rounded-circle(src=video.owner.avatarUrl, width="32", height="32") 
+                if isHeroku
+                    img.rounded-circle(src=video.owner.avatarUrl, width="32", height="32")
+                else 
+                    img.rounded-circle(src=`/${video.owner.avatarUrl}`, width="32", height="32")
                 |   #{video.owner.nickName}
         br
         p.video__description=video.description
@@ -50,19 +53,22 @@ block content
         .video__comments 
             form.video__comment-form#commentForm
                 textarea(cols="30", rows="2", placeholder="Comment", wrap="hard")
-                button.btn.btn-primary Comment
+                button.btn.btn-primary.submitBtn Comment
     
     .video__comments 
         ul 
             each comment in comments.reverse()
                 li.video__comment(data-id=comment._id)
-                    a(href=`/users/${comment.owner._id}`)
-                        img.rounded-circle(src=`/${comment.owner.avatarUrl}`, width="32", height="32") 
-                        p=comment.owner.nickName 
+                    div.commentOwnerInfo
+                        a(href=`/users/${comment.owner._id}`)
+                            img.rounded-circle(src=`/${comment.owner.avatarUrl}`, width="32", height="32") 
+                            span #{comment.owner.nickName} 
+                        if String(comment.owner._id) === String(loggedInUser._id)
+                            span#deleteComment ❌
+                    br
                     span  #{comment.text}
-                    if String(comment.owner._id) === String(loggedInUser._id)
-                        span#deleteComment ❌
-
+                    hr
+                    
 block scripts 
     script(src="/static/js/videoPlayer.js")
     if loggedIn

@@ -4,8 +4,8 @@ include mixins/videoBlock
 block content 
     .album.py-5
         .container
-            .row.row-cols-1.row-cols-sm-2.row-cols-md-3.g-3 
-                each item in videos 
+            .row.row-cols-1.row-cols-sm-2.row-cols-md-4.g-3 
+                each item in videos.reverse()
                     +videoBlock(item)
                 else 
                     li Sorry nothing found.

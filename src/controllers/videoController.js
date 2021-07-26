@@ -111,6 +111,7 @@ export const deleteVideo = async(req, res) => {
         session: { user: { _id } }
     } = req;
     const video = await Video.findById(id);
+    const user = await User.findById( _id );
     
     if(!video) {
         req.flash("error", "Video not found");
@@ -121,6 +122,8 @@ export const deleteVideo = async(req, res) => {
         return res.status(403).redirect("/");
     }
     try {  //findByIdAndDelete는 findOneAndDelete({_id:id}) 를 줄인거임
+        user.videos = user.videos.filter((v) => String(v) !== String(id));
+        await user.save();
         video.comments.forEach( async(comment) => {
             await Comment.findByIdAndDelete(comment);
         });
@@ -161,8 +164,9 @@ export const createComment = async(req, res) => {
         video: id,
     });
     video.comments.push(comment._id);
+    console.log(user);
     await video.save();
-    return res.status(201).json({ newCommentId: comment._id }); //새로운 댓글의 id를 보내주기 위함. fake comment는 id를 가지고 있지 않음
+    return res.status(201).json({ newCommentId: comment._id, user }); //새로운 댓글의 id를 보내주기 위함. fake comment는 id를 가지고 있지 않음
 };
 
 export const deleteComment = async(req, res) => {

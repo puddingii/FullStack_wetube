@@ -75,7 +75,9 @@
   max-width: 320px;
   width: 100%;
   margin-left: 50px;
-  margin-top: 20px;
+  .submitBtn {
+    margin-bottom: 15px;
+  }
   .video__comment-form {
     float: right;
     textarea {
@@ -84,11 +86,15 @@
     }
   }
   .video__comment {
-    padding: 10px;
-    border-radius: 9999px;
-    background-color: white;
-    color: black;
+    padding: 5px 10px;
+    border-radius: 10px;
+    background-color: $bg;
+    color: white;
     margin-bottom: 10px;
+    word-break: break-all;
+    .commentOwnerInfo {
+      font-size: 13px;
+    }
   }
   span {
     white-space: pre-line;

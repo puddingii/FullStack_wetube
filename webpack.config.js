@@ -8,7 +8,8 @@ module.exports = {
         main: BASE_JS + "main.js",
         videoPlayer: BASE_JS + "videoPlayer.js",
         recorder: BASE_JS + "recorder.js",
-        commentSection: BASE_JS + "commentSection.js"
+        commentSection: BASE_JS + "commentSection.js",
+        fileSize: BASE_JS + "fileSize.js",
     },  //input같은 느낌
 
     plugins: [new MiniCssExtractPlugin({
