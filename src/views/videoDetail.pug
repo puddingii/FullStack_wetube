@@ -1,4 +1,5 @@
 extends layouts/main
+include mixins/avatarImg
 
 block content 
     div#videoContainer(data-id=video.id)
@@ -31,11 +32,8 @@ block content
         hr
         div
             a(href=`/users/${video.owner._id}`)
-                if isHeroku
-                    img.rounded-circle(src=video.owner.avatarUrl, width="32", height="32")
-                else 
-                    img.rounded-circle(src=`/${video.owner.avatarUrl}`, width="32", height="32")
-                |   #{video.owner.nickName}
+                +avatarImg(isHeroku, video.owner.avatarUrl)
+                span   #{video.owner.nickName}
         br
         p.video__description=video.description
         br
@@ -61,7 +59,7 @@ block content
                 li.video__comment(data-id=comment._id)
                     div.commentOwnerInfo
                         a(href=`/users/${comment.owner._id}`)
-                            img.rounded-circle(src=`/${comment.owner.avatarUrl}`, width="32", height="32") 
+                            +avatarImg(isHeroku, comment.owner.avatarUrl)
                             span #{comment.owner.nickName} 
                         if String(comment.owner._id) === String(loggedInUser._id)
                             span#deleteComment ❌

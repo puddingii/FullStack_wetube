@@ -164,7 +164,6 @@ export const createComment = async(req, res) => {
         video: id,
     });
     video.comments.push(comment._id);
-    console.log(user);
     await video.save();
     return res.status(201).json({ newCommentId: comment._id, user }); //새로운 댓글의 id를 보내주기 위함. fake comment는 id를 가지고 있지 않음
 };

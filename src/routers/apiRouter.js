@@ -1,4 +1,5 @@
 import express from "express";
+import { emailChk, nickChk } from "../controllers/userController";
 import { registerView, createComment, deleteComment } from "../controllers/videoController";
 
 const apiRouter = express.Router();
@@ -6,5 +7,7 @@ const apiRouter = express.Router();
 apiRouter.post("/videos/:id/view", registerView);
 apiRouter.post("/videos/:id/comment", createComment);
 apiRouter.delete("/comments/:id/delete", deleteComment);
+apiRouter.post("/users/nickChk", nickChk);
+apiRouter.post("/users/emailChk", emailChk);
 
 export default apiRouter;

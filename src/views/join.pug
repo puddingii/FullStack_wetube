@@ -7,12 +7,14 @@ block content
                 div.col-12
                     label.form-label(for="nickName") NickName
                     div.input-group
-                        span.input-group-text #
+                        span.input-group-text#nickChk #
                         input.form-control#nickName(type="text", name="nickName", placeholder="NickName", required)
 
                 div.col-12
                     label.form-label(for="email") Email
-                    input.form-control#email(type="email", name="email", placeholder="xxx@example.com", required)
+                    div.input-group
+                        span.input-group-text#emailChk #
+                        input.form-control#email(type="email", name="email", placeholder="xxx@example.com", required)
 
                 div.col-12
                     label.form-label(for="name") Name
@@ -33,3 +35,6 @@ block content
                 input.btn.btn-secondary(type="submit", value="Join")
 
         include partials/socialLogin
+
+block scripts 
+    script(src="/static/js/chkOverlap.js")

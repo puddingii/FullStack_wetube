@@ -1,0 +1,5 @@
+mixin avatarImg(chk, url)
+    if chk
+        img.rounded-circle(src=url, width="32", height="32")
+    else 
+        img.rounded-circle(src=`/${url}`, width="32", height="32")

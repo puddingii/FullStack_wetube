@@ -217,3 +217,21 @@ export const postChangePassword = async(req, res) => {
     await user.save();
     return res.redirect("/users/logout")
 };
+
+export const nickChk = async(req, res) => {
+    const {
+        body: { text }
+    } = req;
+
+    const check = await User.exists({ nickName: text })
+    return res.status(201).json({ check });
+};
+
+export const emailChk = async(req, res) => {
+    const {
+        body: { text }
+    } = req;
+
+    const check = await User.exists({ email: text })
+    return res.status(201).json({ check });
+};
