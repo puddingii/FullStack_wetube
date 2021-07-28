@@ -5,6 +5,7 @@ const form = document.getElementById("commentForm");
 const deleteBtn = document.querySelectorAll("#deleteComment");
 const videoComments = document.querySelector(".video__comments ul");
 const commentNumber = document.querySelector(".video__comment-number");
+const herokuBtn = document.getElementById("herokuBtn");
 
 const handleDelete = async(event) => {
     const li = event.target.parentElement.parentElement;
@@ -30,8 +31,12 @@ const addComment = (text, id, user) => {
     a.href=`/users/${user._id}`;
 
     const img = document.createElement("img");
-    img.className = "rounded-circle"
-    img.src = `/${user.avatarUrl}`;
+    img.className = "rounded-circle";
+    if(!herokuBtn) {
+        img.src = `/${user.avatarUrl}`;
+    } else {
+        img.src = user.avatarUrl;
+    }
     img.width = "32";
     img.height = "32";
 

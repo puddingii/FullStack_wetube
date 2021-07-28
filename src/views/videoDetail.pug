@@ -27,7 +27,7 @@ block content
         p.hashtag=video.hashtags
 
         h2.video__title=video.title
-        p.metaData 조회수 #{video.meta.views}회 | #{video.createdAt.getFullYear()}. #{video.createdAt.getMonth()}. #{video.createdAt.getDay()}
+        p.metaData 조회수 #{video.meta.views}회 | #{video.createdAt.getFullYear()}. #{video.createdAt.getMonth() + 1}. #{video.createdAt.getDate()}
 
         hr
         div
@@ -51,7 +51,10 @@ block content
         .video__comments 
             form.video__comment-form#commentForm
                 textarea(cols="30", rows="2", placeholder="Comment", wrap="hard")
-                button.btn.btn-primary.submitBtn Comment
+                if isHeroku
+                    button.btn.btn-primary.submitBtn#herokuBtn Comment
+                else 
+                    button.btn.btn-primary.submitBtn Comment
     
     .video__comments 
         ul 
