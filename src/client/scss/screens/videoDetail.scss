@@ -79,7 +79,6 @@
     margin-bottom: 15px;
   }
   .video__comment-form {
-    float: right;
     textarea {
       background-color: $bg;
       color: white;
@@ -94,6 +93,10 @@
     word-break: break-all;
     .commentOwnerInfo {
       font-size: 13px;
+    }
+    textarea {
+      background-color: $bg;
+      color: white;
     }
   }
   span {

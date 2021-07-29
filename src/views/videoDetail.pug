@@ -65,9 +65,10 @@ block content
                             +avatarImg(isHeroku, comment.owner.avatarUrl)
                             span #{comment.owner.nickName} 
                         if String(comment.owner._id) === String(loggedInUser._id)
+                            span#editComment 📄
                             span#deleteComment ❌
                     br
-                    span  #{comment.text}
+                    span#textValue  #{comment.text}
                     hr
                     
 block scripts 
