@@ -1,5 +1,5 @@
 import express from "express";
-import { getEdit, finishGithubLogin, handleLogout, postEdit, startGithubLogin, userDetail, getChangePassword, postChangePassword } from "../controllers/userController";
+import { getEdit, finishGithubLogin, handleLogout, postEdit, startGithubLogin, userDetail, getChangePassword, postChangePassword, postSocialDuplicated, getSocialDuplicated } from "../controllers/userController";
 import { protectorMiddleware, publicOnlyMiddleware, uploadAvatar } from "../middlewares";
 import routes from "../routes";
 
@@ -10,6 +10,7 @@ userRouter.get('/logout', protectorMiddleware, handleLogout);
 userRouter.route(routes.changePassword).get(getChangePassword).post(postChangePassword);
 userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
 userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
+userRouter.route("/socialDuplicated").all(publicOnlyMiddleware).get(getSocialDuplicated).post(postSocialDuplicated);
 userRouter.get(routes.userDetail(), userDetail);
 
 

@@ -32,7 +32,7 @@ const chkNick = async () => {
 };
 
 const chkEmail = async () => {
-    const text = nick.value;
+    const text = email.value;
     if(text === "") {
         emailChk.innerText = "✘";
         return;

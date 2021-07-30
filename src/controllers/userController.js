@@ -42,7 +42,7 @@ export const postLogin = async (req, res) => {
     const pageTitle = "Login";
     const user = await User.findOne( { nickName, socialOnly: false });
     if(!user) {    //check if account exists
-        req.flash("error", "This Nickname does not exist.");
+        req.flash("error", "This Nickname does not exist./Go social login.");
         return res.status(400).render("login", { pageTitle });
     }
     //check if password correct
@@ -118,26 +118,76 @@ export const finishGithubLogin = async (req, res) => {
             req.flash("error", "This github account is disabled.");
             return res.redirect("/login");
         }
-        let user = await User.findOne( { email: emailObj.email });
-        if(!user) { //이메일 있는경우 해당 이메일로 로그인
-            user = await User.create({
-                avatarUrl: userData.avatar_url,
-                name: userData.name? userData.name : "Unknown",
+        const avatarUrl = userData.avatar_url;
+        const name = userData.name? userData.name : "Unknown";
+        const { email } = emailObj;
+        const { location } = userData;
+        const nickName = userData.login;
+        const userNickChk = await User.findOne( { nickName });
+        let userEmailChk = await User.findOne( { email });
+        if(!userEmailChk && !userNickChk) { //이메일 있는경우 해당 이메일로 로그인
+            userEmailChk = await User.create({
+                avatarUrl,
+                name,
                 socialOnly: true,
-                nickName: userData.login,
-                email: emailObj.email,
+                nickName,
+                email,
                 password: "",
-                location: userData.location
+                location
             });
-        } 
-        req.session.loggedIn = true;
-        req.session.user = user;
-        return res.redirect("/");
+            req.session.loggedIn = true;
+            req.session.user = userEmailChk;
+            return res.redirect("/");
+        } else if(!userEmailChk && userNickChk) {
+            const user = { avatarUrl, email, name, location };
+            req.session.socialNickChk = user;
+            req.flash("error", "Nickname is duplicated.");
+            return res.redirect("/users/socialDuplicated");
+        } else {
+            req.session.loggedIn = true;
+            req.session.user = userEmailChk;
+            return res.redirect("/");
+        }
     } else { //access token이 없을 경우
         req.flash("error", "There is no access token.");
         return res.redirect("/login");
     }
 };
+
+export const getSocialDuplicated = async (req, res) => {
+    return res.render("socialDuplicated", { pageTitle: "socialDuplicated", socialNickChk: req.session.socialNickChk });
+}
+
+export const postSocialDuplicated = async (req, res) => {
+    const {
+        body: { nickName, name, location },
+        session: { socialNickChk: { email, avatarUrl} }
+    } = req;
+    try {
+        const exists = await User.exists({ $or: [ { nickName }, { email } ] });  
+        if (exists) {
+            req.flash("error", "This nickName/email is already taken.");
+            return res.sendStatus(404);
+        }
+        const user = await User.create({
+            nickName,
+            socialOnly: true,
+            password: "",
+            email,
+            name,
+            location,
+            avatarUrl
+        });
+        req.flash("success", "Account is created.");
+        req.session.loggedIn = true;
+        req.session.user = user;
+        req.session.socialNickChk = {};
+        return res.redirect("/");
+    } catch(error) {
+        req.flash("error", "DB Error.");
+        return res.sendStatus(404);
+    }
+}
 
 export const userDetail = async(req, res) => {
     const { id } = req.params;

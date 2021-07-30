@@ -1,5 +1,5 @@
 mixin avatarImg(chk, url)
-    if chk
+    if chk || url.slice(0,4) === "http"
         img.rounded-circle(src=url, width="32", height="32")
     else 
         img.rounded-circle(src=`/${url}`, width="32", height="32")

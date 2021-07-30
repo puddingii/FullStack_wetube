@@ -1,0 +1,29 @@
+extends layouts/main
+
+block content 
+    div.form-container 
+        form(method="post")
+            div.row.g-3
+                div.col-12
+                    label.form-label(for="nickName") NickName
+                    div.input-group
+                        span.input-group-text#nickChk #
+                        input.form-control#nickName(type="text", name="nickName", placeholder="NickName", required)
+
+                div.col-12
+                    label.form-label(for="email") Email
+                    div.input-group
+                    input.form-control#email(type="email", name="email", required, value=`${socialNickChk.email}`, disabled)
+
+                div.col-12
+                    label.form-label(for="name") Name
+                    input.form-control(type="text", name="name", placeholder="Full Name", required, value=`${socialNickChk.name}`)
+
+                div.col-12
+                    label.form-label(for="location") Location
+                    input.form-control(type="text", name="location", placeholder="Location", value=`${socialNickChk.location}`)
+                
+                input.btn.btn-secondary(type="submit", value="Join")
+
+block scripts 
+    script(src="/static/js/chkOverlap.js")
