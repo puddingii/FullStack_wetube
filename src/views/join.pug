@@ -22,11 +22,13 @@ block content
 
                 div.col-sm-6
                     label.form-label(for="password") Password
-                    input.form-control(type="password", name="password", placeholder="Password", required)
+                    input.form-control#verifyPass1(type="password", name="password", placeholder="Password", required)
                 
                 div.col-sm-6
                     label.form-label(for="password2") Verify Password
-                    input.form-control(type="password", name="password2", placeholder="Verify Password", required)
+                    div.input-group
+                        span.input-group-text#verifyPassChk #
+                        input.form-control#verifyPass2(type="password", name="password2", placeholder="Verify Password", required)
 
                 div.col-12
                     label.form-label(for="location") Location
@@ -37,4 +39,4 @@ block content
         include partials/socialLogin
 
 block scripts 
-    script(src="/static/js/chkOverlap.js")
+    script(src="/static/js/chkJoinForm.js")

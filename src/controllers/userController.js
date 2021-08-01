@@ -10,8 +10,8 @@ export const getJoin = (req, res) => {
 export const postJoin = async (req,res) => {
     const {name, nickName, email, password, password2, location} = req.body;
     const pageTitle = "Join";
-    if(password !== password2) {
-        req.flash("error", "Password confirmation does not match.");
+    if(password !== password2 || password.includes(" ")) {
+        req.flash("error", "Password confirmation does not match/Do not input spacebar in password.");
         return res.status(400).render("join", { pageTitle });
     }
 
