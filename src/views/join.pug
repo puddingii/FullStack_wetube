@@ -15,6 +15,10 @@ block content
                     div.input-group
                         span.input-group-text#emailChk #
                         input.form-control#email(type="email", name="email", placeholder="xxx@example.com", required)
+                        span.btn.btn-info#btnEmail Code
+                    div
+                        input#emailCode(type="text", name="emailCode", placeholder="Verify Code", required)
+                        span.btn.btn-success#verifyCode Check
 
                 div.col-12
                     label.form-label(for="name") Name
@@ -34,7 +38,7 @@ block content
                     label.form-label(for="location") Location
                     input.form-control(type="text", name="location", placeholder="Location")
 
-                input.btn.btn-secondary(type="submit", value="Join")
+                input.btn.btn-secondary#finalSubmit(type="submit", value="Join" disabled)
 
         include partials/socialLogin
 

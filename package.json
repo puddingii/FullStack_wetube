@@ -23,6 +23,7 @@
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "node-fetch": "^2.6.1",
+    "nodemailer": "^6.6.3",
     "pug": "^3.0.2",
     "regenerator-runtime": "^0.13.7"
   },

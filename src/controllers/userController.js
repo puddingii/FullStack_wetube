@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
 import User from "../models/User";
 import { async } from "regenerator-runtime"; //프론트엔드에서 async를 사용하려면 regenerator Runtime을 사용해야함.
 
@@ -8,13 +9,17 @@ export const getJoin = (req, res) => {
 };
 
 export const postJoin = async (req,res) => {
-    const {name, nickName, email, password, password2, location} = req.body;
+    const {name, nickName, email, password, password2, location, emailCode} = req.body;
     const pageTitle = "Join";
     if(password !== password2 || password.includes(" ")) {
         req.flash("error", "Password confirmation does not match/Do not input spacebar in password.");
         return res.status(400).render("join", { pageTitle });
     }
-
+    if(emailCode !== String(req.session.emailCode[email])) { //frontend에서 확인했지만 backend에서도 확인.
+        req.flash("error", "Please confirm the email check code.");
+        return res.status(400).render("join", { pageTitle });
+    }
+    req.session.emailCode = {};
     const exists = await User.exists({ $or: [ { nickName }, { email } ] });  //email이나 nickName둘중 하나라도 있으면 exists는 True
     if (exists) {
         req.flash("error", "This nickName/email is already taken.");
@@ -284,4 +289,36 @@ export const emailChk = async(req, res) => {
 
     const check = await User.exists({ email: text })
     return res.status(201).json({ check });
+};
+
+export const sendEmail = async (req, res) => {
+    const {
+        body: { 
+            toEmail: email, 
+            randomCode 
+        }
+    } = req;
+    req.session.emailCode[email] = randomCode;
+    const transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        auth: {
+            user: process.env.MAIL_ID, 
+            pass: process.env.MAIL_PW, 
+        },
+    });
+    
+    transporter.sendMail({
+        from: `"puddingii-Youtube" <${process.env.MAIL_ID}@naver.com>`,
+        to: email, 
+        subject: "[puddingii-Youtube] Please verify this code.",
+        text: `Code is ${randomCode}`,
+    }, (err) => {
+        if(err) {
+            //req.flash("error", "Email send error.");
+            res.sendStatus(400);
+        } else {
+            //req.flash("success", "Check your email. (~5minutes)")
+            res.sendStatus(200);
+        }
+    });
 };
