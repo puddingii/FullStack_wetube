@@ -56,5 +56,5 @@ This design pattern is __MVC pattern__.
 Router file has address information.
 - __API router__ : This router has the address used by javascript to connect to db with fetch.
 - __global router__ : This router has 
-- user router : This router has the address for processing user information. 
+- __user router__ : This router has the address for processing user information. 
 - __video router__ : This router has the address for processing video information.
